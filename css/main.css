@@ -1,0 +1,27 @@
+.container{
+    width: 600px;
+    height: 600px;
+}
+
+.box {
+    float: left;
+    height: 30px;
+    width: 30px;
+    background-color: #8e8e8e;
+    
+}
+
+.border-left{
+    
+}
+
+.border-top{
+    
+}
+
+.border-right{
+    
+}
+.border-bottom{
+    
+}
