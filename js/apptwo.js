@@ -18,18 +18,23 @@ function Level(size){
                         }
                 
         }
-    this.timer();
+    
+}
 
+//Constructor of the Hero Object
+function Hero(size){
+    
+    this.position = size * (size - 1);
+    this.targetPosition = $("[order=" +  this.position + "]").append("<div>");
+    this.targetPosition.find(">:first-child").addClass("red");
+
+    
 }
 
 
 //Prototypical Functions of the level
-
 Level.prototype.timer = function(){
-    var gameTimer = setInterval(function(){
-    console.log("I'm done");},
-                                10000);
-    console.log("i've started");
+
 }
 
 
@@ -56,16 +61,29 @@ Level.prototype.randomiseMovements = function(array){
 
 Level.prototype.orchestration = function(randomNumber) {
     var fnToRun = randomNumber;
-    console.log("i'm running! " + randomNumber);
     (fnToRun)();
 }
+
+
+//Prototypical functions of the Hero
+/*hero.prototype.addToBoard =  function(){
+    var make = $("[order=" +  this.position + "]");
+    $(make).addClass("red");
+}
+*/
 
 
 //========RUN THINGS HERE==========//
 $(document).ready(function() {
     
-    level = new Level(10);
-    level.orchestration(level.randomiseMovements(level.arrayOfFns));
+    level = new Level(8);
+    hero = new Hero(8);
+    //level.timer();
+    level.orchestration(level.randomiseMovements(level.arrayOfFns));  
+    console.log(hero.position);
+    console.log(hero);
+
+
     //level.rotateRight();
     //level.rotateLeft();    
     

@@ -1,24 +1,29 @@
 .container{
-    width: 600px;
-    height: 600px;
+    width: 480px;
+    height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    margin: 20px auto;
+    margin: 110px auto;
 }
 
 
 .box {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
     background-color: white;
-    border-right: 4px solid red;
-    border-bottom: 4px solid red;
+    border-right: 2px solid red;
+    border-bottom: 2px solid red;
     
 }
 
-
+.red {
+    background-color: red;
+    width: 40%;
+    height: 40%;
+    margin: 0 auto;
+}
 
 
 .missing-border{
