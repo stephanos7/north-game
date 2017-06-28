@@ -2,28 +2,27 @@
     width: 600px;
     height: 600px;
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    margin: 20px auto;
 }
 
-/*clearfix
-.group:after {
-  content: "";
-  display: table;
-  clear: both;
-}*/
 
 .box {
-    width: 58px;
-    height: 58px;
-    background-color: #8e8e8e;
-    border: 1px solid orange;
+    width: 56px;
+    height: 56px;
+    background-color: white;
+    border-right: 4px solid red;
+    border-bottom: 4px solid red;
     
 }
 
-.border-left{
-    
+
+
+
+.missing-border{
+    border-top: 4px solid red;
 }
 
 .border-top{

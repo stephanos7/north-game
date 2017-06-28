@@ -6,14 +6,15 @@ function Level(size){
     this.unvisitedLedger = [];
     this.setUpLedgerOfAlgorithmVisits();
     this.visitedLedger = [];
+    this.currentPos;
     
     
-    //populate html with maze boxes
-    var n = 0;
+//populate html with maze cells
+    var n = -1
     for(var a = 0; a < this.size; a++){
         for(var b = 0; b < this.size; b++){
             n ++;
-            $('.container').append($('<div>').addClass("box").css("order", n));
+            $('.container').append($('<div>').addClass("box").attr('data-row', a).attr('data-col', b).attr('data-top-margin', '1').attr('right-margin', '1'));
         }
     }
 
@@ -35,7 +36,7 @@ Level.prototype.generateMaze = function(arraySize){
       array.push([]);
         for(var y = 0; y < this.size; y++){
             order ++;
-            array[x].push({objectOrder: order, top: 1, right : 1, visited: false});
+            array[x].push({x: x, y: y, top: 1, right : 1, visited: false});
         }
     }
     return array;
@@ -56,7 +57,7 @@ Level.prototype.defineWalls = function(){
         for(var y = 0; y < this.size; this.maze[x][y++]){
             //while loop may not be necessary here. Algorithm visits all cells anyway via the loop.
             //find a way to loop though based on true visits
-           //do{
+           
                var random = Math.floor(Math.random()*2);
                if(random === 0){
                    this.maze[x][y].top = 0;
@@ -66,7 +67,6 @@ Level.prototype.defineWalls = function(){
                console.log("passing through " + this.maze[x][y].objectOrder);
                console.log("this div's border top value: " + this.maze[x][y].top + " and it's right value: " + this.maze[x][y].right + " whether visited : " + this.maze[x][y].visited);
                
-           //}while(this.maze[x][y+1] === false && this.maze[x+1][y] === false);
         }
     }
 }
@@ -102,49 +102,78 @@ function checkIfVisited(){
 
 
 //function to randomly move
-function runThroughMatrix(){
+Level.prototype.runThroughMatrix = function(){
     //record visited cells
-    
         //add the start cell to visited
-        level.visitedLedger.push([hero.start[0], hero.start[1]]);
+        this.visitedLedger.push([hero.start[0], hero.start[1]]);
         //remove the start cell from unvisited
-        level.unvisitedLedger.pop();
+        this.unvisitedLedger.pop();
+    
+        this.currentPos = this.visitedLedger[this.visitedLedger.length - 1];
+
       
     
     
-    //while something
+    while(this.unvisitedLedger.length > 0){
+        this.currentPos = this.visitNeighbour(this.currentPos);
+this.breakWalls();        
+        
+            console.log("GIVE ME WHAT I'M LOOKING FOR ! " + this.visitNeighbour(this.currentPos));
+        //this.visitedLedger.push(this.currentPos);
+            console.log("This is the state of the visited ledger....: " + this.visitedLedger + " and length " + this.visitedLedger.length);
+        //change div css
+            console.log("did i get the object?" + this.currentPos[0]);
+            console.log("did i get the object?" + this.currentPos[1]);
+
+        
+        
+        
+            this.unvisitedLedger.pop();
+                    console.log("this is the state of the unvisited ledger.....: " + this.unvisitedLedger);
+    }
     
-        console.log(visitNeighbour(level.visitedLedger[level.visitedLedger.length - 1]));
+        //console.log(visitNeighbour(level.visitedLedger[level.visitedLedger.length - 1]));
     
       //interact with specific object
             
-
+    
             
 
                 //console.log(visitNeighbour(visited[visited.length-1]));
                     //}
 }
 
+Level.prototype.breakWalls = function(){
+        var selector = '[data-row=' + this.currentPos[0] + ']' +
+                   '[data-col=' + this.currentPos[1] + ']';
+    console.log(selector);
+        $(selector).addClass("red");
 
+}
     
 //function to randomise neighbour   
-function visitNeighbour(lastPosition){
+Level.prototype.visitNeighbour = function(lastPosition){
+    console.log(lastPosition);
     switch(Math.ceil(Math.random()*4)){
         case 1: 
-        console.log("case 1 to go up");
-        return visitUp(lastPosition);
-        
-           
+            console.log("case 1 to go up");
+                            console.log("this is what i take in as a last position: " + lastPosition);
+                console.log("this is where i go: " + visitUp(lastPosition));
+            return visitUp(lastPosition);    
         case 2:
-        console.log("case 2 to go down");
-        return visitDown(lastPosition);
-           
+            console.log("case 2 to go down");
+                            console.log("this is what i take in as a last position: " + lastPosition);
+                 console.log("this is where i go: " + visitDown(lastPosition));
+            return visitDown(lastPosition);
         case 3:
-        console.log("case 3 to go left");
-        return visitLeft(lastPosition);
-        
+            console.log("case 3 to go left");
+                            console.log("this is what i take in as a last position: " + lastPosition);
+                console.log("this is where i go: " + visitLeft(lastPosition));
+            return visitLeft(lastPosition);;
         case 4:
         console.log("case 4 to go right");
+                        console.log("this is what i take in as a last position: " + lastPosition);
+            console.log("this is where i go: " + visitRight(lastPosition));
         return visitRight(lastPosition);
         }
 }
@@ -152,33 +181,37 @@ function visitNeighbour(lastPosition){
    
 //functions to visit a neighbour
 function visitUp(position){
+    if(position[0] > 0){
     position[0] = position[0] - 1;
-    console.log("new position :" + position);
+    console.log("new position :" + position);}
     return position;
 }
     
 function visitDown(position){
+    if(position[0] < 10){
     position[0] = position[0] + 1;
-    console.log("new position :" + position);
+    console.log("new position :" + position);}
     return position;
 }
     
 function visitLeft(position){
+    if(position[1] > 0){
     position[1] = position[1] - 1;
-    console.log("new position :" + position);
+    console.log("new position :" + position);}
     return position;
 }
     
 function visitRight(position){
+    if(position[1] > 10){
     position[1] = position[1] + 1;
-    console.log("new position :" + position);
+    console.log("new position :" + position);}
     return position;
 }
 
 //Initialise JQUERY
 $(document).ready(function() {
     
-    //============RUN THINGS HERE=================================<<
+    //========RUN THINGS HERE==========//
     level = new Level(10);
     hero = new Hero();
     console.log(level.maze);
@@ -199,15 +232,18 @@ $(document).ready(function() {
     
     level.setUpLedgerOfAlgorithmVisits();
     
-    runThroughMatrix();  
+    level.runThroughMatrix();  
     
-    console.log("logging the unvisited...");
+    level.breakWalls();
+
+    //console.log("logging the unvisited...");
     
-    console.log(level.unvisitedLedger);  
+    //console.log(level.unvisitedLedger);  
     
-    console.log("logging the visited...");
+    //console.log("logging the visited...");
     
-    console.log(level.visitedLedger);  
+    //console.log(level.visitedLedger);  
+    
     
     
     
