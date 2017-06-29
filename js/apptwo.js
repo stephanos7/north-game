@@ -1,18 +1,10 @@
-//Constructor of the Hero Object
-function Hero(dimension){
-    
- 
-}
-
-
-
 //Constructor of each new level object
 function Level(size){
     this.size = size;
     this.totalCells = size * size;
     this.currentPos;
     this.matrix = [];
-    this.arrayOfFns =[this.rotateRight,this.rotateLeft];
+    this.arrayOfFns =[this.rotateRight, this.rotateLeft, this.rotate180left, this.rotate180right];
     this.position = (size - 1) * size;
     this.rightBorder = [];
     this.leftBorder = [];
@@ -20,6 +12,9 @@ function Level(size){
     this.bottomBorder = [];
     this.secretPath = [56,48,40,32,33,41,49,50,58,59,51,43,35,34,26,25,17,18,19,27,28,20,12,13,21,29,37,36,44,45,46,54,55,47,39,31,23,22,14,6,5,4,3,2,10,9,8];
     this.directionsToBreakWalls = [];
+    this.winningPosition = 8;
+    this.won = false;
+    this.levelTime = size * size;
     
 //Populate html with maze cells
     var order = -1;
@@ -34,25 +29,42 @@ function Level(size){
 
 
     
-this.reDraw();
-this.assignControlsToKeys();   
-this.applyBorderRight(size);
-this.applyBorderLeft(size);
-this.applyBorderTop(size);
-this.applyBorderBottom(size);
-this.defineWalls(this.matrix, this.secretPath);
-this.breakWalls(this.secretPath);
-this.drawStandingWalls(this.matrix);
-this.drawLeftBoundaryWalls(this.leftBorder, this.matrix);
-this.drawBottomBoundaryWalls(this.bottomBorder, this.matrix);
+        this.reDraw();
+        this.assignControlsToKeys();   
+        this.applyBorderRight(size);
+        this.applyBorderLeft(size);
+        this.applyBorderTop(size);
+        this.applyBorderBottom(size);
+        this.defineWalls(this.matrix, this.secretPath);
+        this.breakWalls(this.secretPath);
+        this.drawStandingWalls(this.matrix);
+        this.drawLeftBoundaryWalls(this.leftBorder, this.matrix);
+        this.drawBottomBoundaryWalls(this.bottomBorder, this.matrix);
+//this.timerAnimation();
+    
+//this.orchestration(this.randomiseMovements(this.arrayOfFns));
+//this.randomiseMovements(this.arrayOfFns);
+//this.orchestration(this.arrayOfFns);
 
-
-
-
+setInterval(function(){ level.orchestration(level.arrayOfFns); }, 5000);
     
 }
 
 //Prototypical Functions of each level
+
+Level.prototype.timerAnimation = function(){
+    console.log('im running every 5 secs');
+    this.orchestration(this.arrayOfFns);
+    this.intervalID = setInterval(this.timerAnimation.bind(this), 5000);
+}
+
+Level.prototype.winningCollision = function(){
+    if(this.position == this.winningPosition){
+        alert("you won!");
+        this.won = true;
+        console.log(this.won);
+    }
+}
 
 Level.prototype.applyBorderRight = function(size){
     this.rightBorder.push(size - 1);
@@ -61,7 +73,6 @@ Level.prototype.applyBorderRight = function(size){
         counter ++;
         this.rightBorder.push(((size -1) * x) + counter);
     }
-    console.log(this.rightBorder);
 }
 
 Level.prototype.applyBorderLeft = function(size){
@@ -85,7 +96,6 @@ Level.prototype.applyBorderBottom = function(size){
 
 Level.prototype.defineWalls = function(mazeArray, rightPathNumbers){
     mazeArray.forEach(function(element){
-        console.log(element.order);
         if(rightPathNumbers.indexOf(element.order) != -1){
             element.secretPath = true;
             }else{
@@ -141,11 +151,6 @@ Level.prototype.drawBottomBoundaryWalls = function(borderArray, mazeArray){
     })
 }
 
-
-Level.prototype.timer = function(){
-
-}
-
 Level.prototype.reDraw = function(){
     var make = $("[order=" +  this.position + "]");
     $('.red').remove();
@@ -160,7 +165,8 @@ Level.prototype.rotateRight = function(){
                                 },
                                 duration:'slow'
                                 },'linear');
-                                }
+                                };
+
 Level.prototype.rotateLeft = function(){
     $('#board').animate({  borderSpacing: -90 }, 
                         {  step: function(now,fx) {
@@ -168,16 +174,36 @@ Level.prototype.rotateLeft = function(){
                                 },
                                 duration:'slow'
                                 },'linear');
-                                }
+                                };
+
+Level.prototype.rotate180left = function(){
+    $('#board').animate({  borderSpacing: -180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration:'slow'
+                                },'linear');
+                                };
+
+Level.prototype.rotate180right = function(){
+    $('#board').animate({  borderSpacing: 180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration:'slow'
+                                },'linear');
+                                };
 
 Level.prototype.randomiseMovements = function(array){
-    return array[Math.floor(Math.random()*array.length)];
-}
+    
+};
 
-Level.prototype.orchestration = function(randomNumber) {
-    var fnToRun = randomNumber;
-    (fnToRun)();
-}
+Level.prototype.orchestration = function(arr) {
+    var ranNum = Math.floor(Math.random()*arr.length); 
+    console.log(ranNum);
+    var choice = arr[ranNum];
+    choice();
+};
 
 Level.prototype.assignControlsToKeys = function() {
   $(document).on('keydown', function(e) {
@@ -206,14 +232,12 @@ Level.prototype.assignControlsToKeys = function() {
   }.bind(this));
 }
 
-
-
-
-
 Level.prototype.goLeft = function() {
-    if(this.leftBorder.indexOf(this.position) == -1){
-    this.position -= 1; 
+    if(this.leftBorder.indexOf(this.position) == -1 && this.matrix[this.position - 1].right === 0){
+    this.position -= 1;
+            console.log(level.position);
     this.reDraw();
+    this.winningCollision();
     }else{
     console.log("hit");
     }
@@ -221,17 +245,21 @@ Level.prototype.goLeft = function() {
 }
 
 Level.prototype.goRight = function() {
-    if(this.rightBorder.indexOf(this.position) == -1){
-    this.position += 1; 
-    this.reDraw();
+    if(this.rightBorder.indexOf(this.position) == -1  && this.matrix[this.position].right === 0){
+    this.position += 1;
+            console.log(level.position);
+    this.reDraw();    
+    this.winningCollision();
     }else{
     console.log("hit");
     }
 }
 
 Level.prototype.goUp = function() {
-    if(this.topBorder.indexOf(this.position) == -1){
-    this.position -= 8; 
+    if(this.topBorder.indexOf(this.position) == -1 && this.matrix[this.position].top === 0){
+    this.position -= 8;
+        console.log(level.position);
+    this.winningCollision();
     this.reDraw();
     }else{
     console.log("hit");
@@ -241,8 +269,10 @@ Level.prototype.goUp = function() {
 }
 
 Level.prototype.goDown = function() {
-    if(this.bottomBorder.indexOf(this.position) == -1){
+    if(this.bottomBorder.indexOf(this.position) == -1 && this.matrix[this.position + 8].top === 0){
     this.position += 8; 
+            console.log(level.position);
+    this.winningCollision();
     this.reDraw();
     }else{
     console.log("hit");
@@ -251,41 +281,12 @@ Level.prototype.goDown = function() {
 }
 
 //========RUN THINGS HERE==========//
+
 $(document).ready(function() {
+    
     level = new Level(8);
-        hero = new Hero(8);
     
-    console.log("right border " + level.rightBorder);
-        console.log("left border " + level.leftBorder);
-    console.log("top border " + level.topBorder);
-        console.log("bottom border " + level.bottomBorder);
-
-
-     console.log(level.leftBorder);
-    //level.timer();
-    //level.orchestration(level.randomiseMovements(level.arrayOfFns));
-   //checks
     console.log(level.matrix);
-    
-    
-    /*level.reDraw();
-    
-        level.goUp();
-        console.log(level.position);
 
-        level.reDraw();
-    
-            level.goUp();
-            console.log(level.position);
-
-            level.reDraw();
-
-                level.goUp();
-                console.log(level.position);
-
-                level.reDraw();
-
-    //level.rotateRight();
-    //level.rotateLeft();    
-*/    
+  
 });
