@@ -15,7 +15,12 @@ function Level(size){
     this.arrayOfFns =[this.rotateRight,this.rotateLeft];
     this.position = (size - 1) * size;
     this.rightBorder = [];
-    
+    this.leftBorder = [];
+    this.topBorder = [];
+    this.bottomBorder = [];
+    //this.mazeSource = [];
+    this.secretPath = [56,48,40,32,33,41,49,50,58,59,51,43,35,34,26,25,17,18,19,27,28,20,12,13,21,29,37,36,44,45,46,54,55,47,39,31,23,22,14,6,5,4,3,2,10,9,8];
+    this.directionsToBreakWalls = [];
     
 //Populate html with maze cells
     var order = -1;
@@ -23,19 +28,26 @@ function Level(size){
         for(var y = 0; y < this.size; y++){
             order++
                 $(".container").append($("<div>").addClass("box").attr("data-row-", x).attr("data-col", y).attr("order", order).text(order));
-                        //var boderSelector = '[data-row=' + x + ']' + '[data-col=' + y + ']';
-                            //this.matrix.push({row: x, col: y, path: true});
-                               // $(this.boderSelector[0][y]).addClass("missing-border");
+                        this.matrix.push({order : order, top: 1, right: 1, secretPath: ""});
                         }
                 
         }
 
+
     
 this.reDraw();
-this.assignControlsToKeys();    
+this.assignControlsToKeys();   
+this.applyBorderRight(size);
+this.applyBorderLeft(size);
+this.applyBorderTop(size);
+this.applyBorderBottom(size);
+this.defineWalls(this.matrix, this.secretPath);
+this.breakWalls(this.secretPath);
 
     
 }
+
+
 Level.prototype.applyBorderRight = function(size){
     this.rightBorder.push(size - 1);
     var counter = 0;
@@ -46,6 +58,70 @@ Level.prototype.applyBorderRight = function(size){
     console.log(this.rightBorder);
 }
 
+Level.prototype.applyBorderLeft = function(size){
+    this.leftBorder.push(size - size);
+    for(var x = 1; x < size; x++){
+        this.leftBorder.push(size * x);
+    }
+}
+
+Level.prototype.applyBorderTop = function(size){
+    for(var x = 0; x < size; x++){
+        this.topBorder.push(x);
+    }
+}
+
+Level.prototype.applyBorderBottom = function(size){
+    for(var x = 0; x < size; x++){
+        this.bottomBorder.push((size * (size-1)) + x);
+    }
+}
+
+Level.prototype.defineWalls = function(mazeArray, rightPathNumbers){
+    mazeArray.forEach(function(element){
+        console.log(element.order);
+        if(rightPathNumbers.indexOf(element.order) != -1){
+            element.secretPath = true;
+            }else{
+            element.secretPath = false;
+            }
+
+    })
+    
+}
+
+Level.prototype.breakWalls = function(righPathNumbers){
+    for(var x = 0; x < righPathNumbers.length; x++){
+     switch(righPathNumbers[x] - righPathNumbers[x+1]){
+         case 8:
+            this.matrix[righPathNumbers[x]].top = 0;
+             break;
+         case -8: 
+             this.matrix[righPathNumbers[x + 1]].top = 0;
+             break;
+         case -1: 
+             this.matrix[righPathNumbers[x]].right = 0;
+             break;
+         case 1:
+             this.matrix[righPathNumbers[x + 1]].right = 0;
+             break;
+                                                     } 
+        }
+    }
+
+Level.prototype.drawStandingWalls = function(mazeArray){
+        mazeArray.forEach(function(element){
+            var make = $("[order=" +  element.order + "]");
+        if(element.top === 1){
+            $(make).addClass("top-border");
+        }if(element.right === 1){
+            $(make).addClass("right-border");
+        }
+        
+    })
+}
+
+
 //Prototypical Functions of the level
 Level.prototype.timer = function(){
 
@@ -53,7 +129,6 @@ Level.prototype.timer = function(){
 
 Level.prototype.reDraw = function(){
     var make = $("[order=" +  this.position + "]");
-    console.log("what i give to redraw " + make);
     $('.red').remove();
     $(make).append($("<div>").addClass("red"));
     //split append give it to constr
@@ -117,32 +192,42 @@ Level.prototype.assignControlsToKeys = function() {
 
 
 Level.prototype.goLeft = function() {
-    console.log("going left", level.position);
-    level.position -= 1;
+    if(this.leftBorder.indexOf(this.position) == -1){
+    this.position -= 1; 
     this.reDraw();
-
+    }else{
+    console.log("hit");
+    }
 
 }
 
 Level.prototype.goRight = function() {
-    console.log("going right", level.position);
-    level.position += 1;
+    if(this.rightBorder.indexOf(this.position) == -1){
+    this.position += 1; 
     this.reDraw();
-
+    }else{
+    console.log("hit");
+    }
 }
 
 Level.prototype.goUp = function() {
-    console.log("going up", level.position);
-    level.position -= 8;
+    if(this.topBorder.indexOf(this.position) == -1){
+    this.position -= 8; 
     this.reDraw();
+    }else{
+    console.log("hit");
+    }
 
 
 }
 
 Level.prototype.goDown = function() {
-    console.log("going down", level.position);
-    level.position += 8; 
+    if(this.bottomBorder.indexOf(this.position) == -1){
+    this.position += 8; 
     this.reDraw();
+    }else{
+    console.log("hit");
+    }
 
 }
 
@@ -151,14 +236,20 @@ $(document).ready(function() {
     level = new Level(8);
         hero = new Hero(8);
     
-    level.applyBorderRight(8);
+    console.log("right border " + level.rightBorder);
+        console.log("left border " + level.leftBorder);
+    console.log("top border " + level.topBorder);
+        console.log("bottom border " + level.bottomBorder);
+
 
      
     
     //level.timer();
     //level.orchestration(level.randomiseMovements(level.arrayOfFns));
-
    //checks
+    console.log(level.matrix);
+    level.drawStandingWalls(level.matrix);
+    
     
     /*level.reDraw();
     
