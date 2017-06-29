@@ -1,3 +1,19 @@
+.wrapper{
+    height: 100vh;
+    background: radial-gradient(#4a4a4a, #1a1a1a); /* Standard syntax */
+}
+
+h1{
+    margin: 0;
+    text-align: center;
+    padding: 20px;
+    font-family: "Comfortaa", cursive;
+    font-weight: 300;
+    color: red;
+    opacity: 0.8;
+
+}
+
 .container{
     width: 480px;
     height: 480px;
@@ -5,15 +21,17 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    margin: 110px auto;
+    padding: 80px;
+    margin: 0 auto;
     
 }
 
 
 .box {
-    width: 58px;
-    height: 58px;
-    background-color: white;
+    width: 56px;
+    height: 56px;
+    background-color: #4a4a4a;
+    border: 2px solid #4a4a4a;
 
     
 }
@@ -21,12 +39,16 @@
 .top-border {
     border-top: 2px solid red;
     transition: border-color 1s linear;
+    animation: pulse-border-1 5000ms ease-in-out infinite alternate;
+
 
 }
 
 .right-border {
     border-right: 2px solid red;
     transition: border-color 1s linear;
+    animation: pulse-border-1 4000ms ease-in-out infinite alternate;
+
 
 }
 
@@ -45,12 +67,40 @@
 
 .red {
     background-color: red;
-    width: 40%;
-    height: 40%;
-    margin: 0 auto;
+    width: 33%;
+    height: 33%;
+    margin: 33% auto;
+    border-radius: 50%;
+    animation: pulse-dot 1000ms ease-in-out infinite alternate;
+
 }
 
 
 .missing-border{
     border-top: 2px solid red;
 }
+
+@keyframes pulse-dot {
+    from {
+        width: 33%;
+        height: 33%;
+        opacity: 1;
+    }
+    to {
+        width: 30%;
+        height: 30%;
+        margin: 35% auto;
+        opacity: 0.75;
+    }
+}
+
+@keyframes pulse-border-1 {
+    from {
+
+        opacity: 1;
+    }
+    to {
+        opacity: 0.4;
+    }
+}
+

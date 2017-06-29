@@ -1,3 +1,4 @@
+
 //Constructor of each new level object
 function Level(size){
     this.size = size;
@@ -21,7 +22,7 @@ function Level(size){
     for(var x = 0; x < this.size; x++){
         for(var y = 0; y < this.size; y++){
             order++
-                $(".container").append($("<div>").addClass("box").attr("data-row-", x).attr("data-col", y).attr("order", order).text(order));
+                $(".container").append($("<div>").addClass("box").attr("data-row-", x).attr("data-col", y).attr("order", order));//.text(order));
                         this.matrix.push({order : order, top: 1, right: 1, secretPath: ""});
                         }
                 
@@ -40,13 +41,9 @@ function Level(size){
         this.drawStandingWalls(this.matrix);
         this.drawLeftBoundaryWalls(this.leftBorder, this.matrix);
         this.drawBottomBoundaryWalls(this.bottomBorder, this.matrix);
-//this.timerAnimation();
-    
-//this.orchestration(this.randomiseMovements(this.arrayOfFns));
-//this.randomiseMovements(this.arrayOfFns);
-//this.orchestration(this.arrayOfFns);
 
-setInterval(function(){ level.orchestration(level.arrayOfFns); }, 5000);
+
+//setInterval(function(){ level.orchestration(level.arrayOfFns); }, 5000);
     
 }
 
