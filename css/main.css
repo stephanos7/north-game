@@ -12,7 +12,7 @@
 .box {
     width: 58px;
     height: 58px;
-    background-color: grey;
+    background-color: white;
 
     
 }
@@ -23,6 +23,14 @@
 
 .right-border {
     border-right: 2px solid red;
+}
+
+.left-border{
+    border-left: 2px solid red;
+}
+
+.bottom-border{
+    border-bottom: 2px solid red;
 }
 
 .red {

@@ -6,7 +6,7 @@ function Hero(dimension){
 
 
 
-//Constructor of each new level
+//Constructor of each new level object
 function Level(size){
     this.size = size;
     this.totalCells = size * size;
@@ -18,7 +18,6 @@ function Level(size){
     this.leftBorder = [];
     this.topBorder = [];
     this.bottomBorder = [];
-    //this.mazeSource = [];
     this.secretPath = [56,48,40,32,33,41,49,50,58,59,51,43,35,34,26,25,17,18,19,27,28,20,12,13,21,29,37,36,44,45,46,54,55,47,39,31,23,22,14,6,5,4,3,2,10,9,8];
     this.directionsToBreakWalls = [];
     
@@ -43,10 +42,17 @@ this.applyBorderTop(size);
 this.applyBorderBottom(size);
 this.defineWalls(this.matrix, this.secretPath);
 this.breakWalls(this.secretPath);
+this.drawStandingWalls(this.matrix);
+this.drawLeftBoundaryWalls(this.leftBorder, this.matrix);
+this.drawBottomBoundaryWalls(this.bottomBorder, this.matrix);
+
+
+
 
     
 }
 
+//Prototypical Functions of each level
 
 Level.prototype.applyBorderRight = function(size){
     this.rightBorder.push(size - 1);
@@ -121,8 +127,21 @@ Level.prototype.drawStandingWalls = function(mazeArray){
     })
 }
 
+Level.prototype.drawLeftBoundaryWalls = function(borderArray, mazeArray){
+        borderArray.forEach(function(element){
+        var make = $("[order=" +  mazeArray[element].order + "]");
+        $(make).addClass("left-border");        
+    })
+}
 
-//Prototypical Functions of the level
+Level.prototype.drawBottomBoundaryWalls = function(borderArray, mazeArray){
+        borderArray.forEach(function(element){
+        var make = $("[order=" +  mazeArray[element].order + "]");
+        $(make).addClass("bottom-border");        
+    })
+}
+
+
 Level.prototype.timer = function(){
 
 }
@@ -242,13 +261,11 @@ $(document).ready(function() {
         console.log("bottom border " + level.bottomBorder);
 
 
-     
-    
+     console.log(level.leftBorder);
     //level.timer();
     //level.orchestration(level.randomiseMovements(level.arrayOfFns));
    //checks
     console.log(level.matrix);
-    level.drawStandingWalls(level.matrix);
     
     
     /*level.reDraw();
