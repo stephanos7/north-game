@@ -1,3 +1,5 @@
+
+
 .wrapper{
     height: 100vh;
     display: flex;
@@ -21,6 +23,52 @@
 #restart:hover{
             animation: pulse-border-1 500ms ease-in-out infinite alternate;
 
+}
+
+#brain{
+    
+        position: absolute;
+        top: 33%;
+        margin: 0 auto;
+        animation: pulse-border-1 800ms ease-in-out infinite alternate;
+
+}
+
+.intro{
+        color: white;
+        width: 600px;
+        position: absolute;
+        top: 20%;
+        margin: 0 auto;
+        text-align: center;
+        font-family: "Comfortaa", cursive;
+        font-size: 13px;
+        font-weight: 100;
+        padding-bottom: 20px;
+
+    
+}
+
+.button{
+    color: white;
+    background-color: rgba(0,0,0,0);
+    font-family: "Comfortaa", cursive;
+    font-size: 14px;
+    font-weight: 200;
+    padding: 8px 20px;
+}
+
+
+#start{
+        position: absolute;
+        top: 82%;
+        margin: 0 auto;   
+}
+
+#start:hover {
+        border: 2px solid white;
+        border-radius: 4px;
+        animation: pulse-border-1 400ms ease-in-out infinite alternate;
 }
 
 h1{

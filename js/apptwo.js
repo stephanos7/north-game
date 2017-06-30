@@ -1,4 +1,3 @@
-
 //Constructor of each new level object
 function Level(size){
     this.size = size;
@@ -71,7 +70,7 @@ function(){
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 600
+                                duration: 900
                                 },'linear');
 },
         //rotate left -
@@ -87,7 +86,7 @@ function(){
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 600
+                                duration: 900
                                 },'linear');
 },
         //rotate 180 right 
@@ -96,13 +95,13 @@ function(){
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 1500
+                                duration: 2000
                                 },'linear');
     $('#arrow').animate({  borderSpacing: 180 }, 
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 1400
+                                duration: 2200
                                 },'linear');
 },
         //rotate 180 left
@@ -111,13 +110,13 @@ function(){
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 1500
+                                duration: 2000
                                 },'linear');
     $('#arrow').animate({  borderSpacing: -180 }, 
                         {  step: function(now,fx) {
                                 $(this).css('-webkit-transform','rotate('+now+'deg)'); 
                                 },
-                                duration: 1400
+                                duration: 2200
                                 },'linear');
 }
     
@@ -129,14 +128,14 @@ function(){
     count++
     console.log("number of rotations so far : " + count);
     
-    if (count > 4 || that.winningCollision === true) {
+    if (count > 90 || that.winningCollision === true) {
     console.log("cleared!");
     clearInterval(that.intervalId);
     }
         
     
     
-}, 4000)};
+}, 5000)};
     
 Level.prototype.showRestart = function(){
      $("#restart").toggle();
@@ -327,12 +326,21 @@ Level.prototype.goDown = function() {
 
 $(document).ready(function() {
     
-    var level = new Level(8);
+    $("#start").on("click", function(){
+        console.log("start clicked!");
+        $("#start").hide();
+        $("#brain").hide();
+        $("p").hide();
+
+        var level = new Level(8);
+    })
+    
+    //var level = new Level(8);
     
     $("#restart").on("click", function(){
         alert("clicked");
         level.showRestart();
-        level = new Level(8);
+        //level = new Level(8);
     })
     
   
