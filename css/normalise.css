@@ -25,6 +25,9 @@ html {
  * Remove the margin in all browsers (opinionated).
  */
 
+
+
+
 body {
   margin: 0;
 }
@@ -32,6 +35,10 @@ body {
 /**
  * Add the correct display in IE 9-.
  */
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
 
 article,
 aside,
@@ -48,7 +55,6 @@ section {
  */
 
 h1 {
-  font-size: 2em;
   margin: 0;
 }
 

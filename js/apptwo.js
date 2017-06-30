@@ -5,7 +5,6 @@ function Level(size){
     this.totalCells = size * size;
     this.currentPos;
     this.matrix = [];
-    this.arrayOfFns =[this.rotateRight, this.rotateLeft, this.rotate180left, this.rotate180right];
     this.position = (size - 1) * size;
     this.rightBorder = [];
     this.leftBorder = [];
@@ -15,7 +14,7 @@ function Level(size){
     this.directionsToBreakWalls = [];
     this.winningPosition = 8;
     this.won = false;
-    this.levelTime = size * size;
+    this.time = size * size;
     
 //Populate html with maze cells
     var order = -1;
@@ -28,8 +27,7 @@ function Level(size){
                 
         }
 
-
-    
+        this.endPoint();
         this.reDraw();
         this.assignControlsToKeys();   
         this.applyBorderRight(size);
@@ -41,25 +39,119 @@ function Level(size){
         this.drawStandingWalls(this.matrix);
         this.drawLeftBoundaryWalls(this.leftBorder, this.matrix);
         this.drawBottomBoundaryWalls(this.bottomBorder, this.matrix);
+        this.rotateBoard();
 
 
-//setInterval(function(){ level.orchestration(level.arrayOfFns); }, 5000);
+
     
 }
 
 //Prototypical Functions of each level
 
-Level.prototype.timerAnimation = function(){
-    console.log('im running every 5 secs');
-    this.orchestration(this.arrayOfFns);
-    this.intervalID = setInterval(this.timerAnimation.bind(this), 5000);
+
+
+Level.prototype.rotateBoard = function() {
+    var count = 0;
+    var that = this;
+    that.intervalId = setInterval(function(){
+        
+        
+    var arrayOfFns =[
+            //rotate right +
+
+function(){
+    $('#board').animate({  borderSpacing: 90 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 700
+                                },'linear');
+                               
+    $('#arrow').animate({  borderSpacing: 90 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 600
+                                },'linear');
+},
+        //rotate left -
+function(){
+            $('#board').animate({  borderSpacing: -90 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 700
+                                },'linear');
+                                
+            $('#arrow').animate({  borderSpacing: -90 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 600
+                                },'linear');
+},
+        //rotate 180 right 
+function(){
+    $('#board').animate({  borderSpacing: 180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 1500
+                                },'linear');
+    $('#arrow').animate({  borderSpacing: 180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 1400
+                                },'linear');
+},
+        //rotate 180 left
+function(){
+    $('#board').animate({  borderSpacing: -180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 1500
+                                },'linear');
+    $('#arrow').animate({  borderSpacing: -180 }, 
+                        {  step: function(now,fx) {
+                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+                                },
+                                duration: 1400
+                                },'linear');
+}
+    
+    ];
+    
+    var ranNum = Math.floor(Math.random()*arrayOfFns.length); 
+    arrayOfFns[ranNum]();
+        
+    count++
+    console.log("number of rotations so far : " + count);
+    
+    if (count > 4 || that.winningCollision === true) {
+    console.log("cleared!");
+    clearInterval(that.intervalId);
+    }
+        
+    
+    
+}, 4000)};
+    
+Level.prototype.showRestart = function(){
+     $("#restart").toggle();
 }
 
 Level.prototype.winningCollision = function(){
     if(this.position == this.winningPosition){
+        $('.red').fadeOut("slow");
+        $('.box').fadeOut("slow");
+        clearInterval(this.intervalId);
+        this.showRestart();
         alert("you won!");
-        this.won = true;
-        console.log(this.won);
+        return true;
+       
+        
     }
 }
 
@@ -155,52 +247,10 @@ Level.prototype.reDraw = function(){
     //split append give it to constr
 }
 
-Level.prototype.rotateRight = function(){
-    $('#board').animate({  borderSpacing: 90 }, 
-                        {  step: function(now,fx) {
-                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-                                },
-                                duration:'slow'
-                                },'linear');
-                                };
-
-Level.prototype.rotateLeft = function(){
-    $('#board').animate({  borderSpacing: -90 }, 
-                        {  step: function(now,fx) {
-                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-                                },
-                                duration:'slow'
-                                },'linear');
-                                };
-
-Level.prototype.rotate180left = function(){
-    $('#board').animate({  borderSpacing: -180 }, 
-                        {  step: function(now,fx) {
-                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-                                },
-                                duration:'slow'
-                                },'linear');
-                                };
-
-Level.prototype.rotate180right = function(){
-    $('#board').animate({  borderSpacing: 180 }, 
-                        {  step: function(now,fx) {
-                                $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-                                },
-                                duration:'slow'
-                                },'linear');
-                                };
-
-Level.prototype.randomiseMovements = function(array){
-    
-};
-
-Level.prototype.orchestration = function(arr) {
-    var ranNum = Math.floor(Math.random()*arr.length); 
-    console.log(ranNum);
-    var choice = arr[ranNum];
-    choice();
-};
+Level.prototype.endPoint = function(){
+    var make = $("[order=" +  this.winningPosition + "]");
+    $(make).append($("<div>").addClass("green"));
+}
 
 Level.prototype.assignControlsToKeys = function() {
   $(document).on('keydown', function(e) {
@@ -232,7 +282,6 @@ Level.prototype.assignControlsToKeys = function() {
 Level.prototype.goLeft = function() {
     if(this.leftBorder.indexOf(this.position) == -1 && this.matrix[this.position - 1].right === 0){
     this.position -= 1;
-            console.log(level.position);
     this.reDraw();
     this.winningCollision();
     }else{
@@ -244,7 +293,6 @@ Level.prototype.goLeft = function() {
 Level.prototype.goRight = function() {
     if(this.rightBorder.indexOf(this.position) == -1  && this.matrix[this.position].right === 0){
     this.position += 1;
-            console.log(level.position);
     this.reDraw();    
     this.winningCollision();
     }else{
@@ -255,7 +303,6 @@ Level.prototype.goRight = function() {
 Level.prototype.goUp = function() {
     if(this.topBorder.indexOf(this.position) == -1 && this.matrix[this.position].top === 0){
     this.position -= 8;
-        console.log(level.position);
     this.winningCollision();
     this.reDraw();
     }else{
@@ -268,7 +315,6 @@ Level.prototype.goUp = function() {
 Level.prototype.goDown = function() {
     if(this.bottomBorder.indexOf(this.position) == -1 && this.matrix[this.position + 8].top === 0){
     this.position += 8; 
-            console.log(level.position);
     this.winningCollision();
     this.reDraw();
     }else{
@@ -281,9 +327,13 @@ Level.prototype.goDown = function() {
 
 $(document).ready(function() {
     
-    level = new Level(8);
+    var level = new Level(8);
     
-    console.log(level.matrix);
-
+    $("#restart").on("click", function(){
+        alert("clicked");
+        level.showRestart();
+        level = new Level(8);
+    })
+    
   
 });

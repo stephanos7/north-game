@@ -1,43 +1,68 @@
 .wrapper{
     height: 100vh;
-    background: radial-gradient(#4a4a4a, #1a1a1a); /* Standard syntax */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:  radial-gradient(#4a4a4a, #1a1a1a); /* Standard syntax */
+}
+
+#arrow{
+        animation: pulse-border-1 1400ms ease-in-out infinite alternate;
+}
+
+#restart{
+        display: none;
+        position: absolute;
+        top: 45%;
+        margin: 0 auto;
+}
+
+#restart:hover{
+            animation: pulse-border-1 500ms ease-in-out infinite alternate;
+
 }
 
 h1{
-    margin: 0;
+    margin: 10px;
     text-align: center;
     padding: 20px;
     font-family: "Comfortaa", cursive;
     font-weight: 300;
-    color: red;
+    color: whitesmoke;
+    font-size: 24px;
     opacity: 0.8;
 
 }
 
+
+
 .container{
-    width: 480px;
-    height: 480px;
+    width: 600px;
+    height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 90px;
     flex-wrap: wrap;
-    padding: 80px;
-    margin: 0 auto;
     
 }
 
 
 .box {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     background-color: #4a4a4a;
     border: 2px solid #4a4a4a;
+    margin: 0;
+    padding: 0;
 
     
 }
 
 .top-border {
-    border-top: 2px solid red;
+    border-top: 2px solid white;
+    border-radius: 4px;
     transition: border-color 1s linear;
     animation: pulse-border-1 5000ms ease-in-out infinite alternate;
 
@@ -45,7 +70,8 @@ h1{
 }
 
 .right-border {
-    border-right: 2px solid red;
+    border-right: 2px solid white;
+    border-radius: 4px;
     transition: border-color 1s linear;
     animation: pulse-border-1 4000ms ease-in-out infinite alternate;
 
@@ -53,13 +79,15 @@ h1{
 }
 
 .left-border{
-    border-left: 2px solid red;
+    border-left: 2px solid white;
+    border-radius: 4px;
     transition: border-color 1s linear;
 
 }
 
 .bottom-border{
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid white;
+    border-radius: 4px;
     transition: border-color 1s linear;
 
 }
@@ -74,7 +102,15 @@ h1{
     animation: pulse-dot 1000ms ease-in-out infinite alternate;
 
 }
-
+.green{
+    background-color: #4a4a4a;
+    opacity: 0.8;
+    border: 3px solid #00FF53;
+    width: 33%;
+    height: 33%;
+    margin: 35% auto;
+    border-radius: 50%;
+}
 
 .missing-border{
     border-top: 2px solid red;
@@ -97,10 +133,10 @@ h1{
 @keyframes pulse-border-1 {
     from {
 
-        opacity: 1;
+        opacity: 0.9;
     }
     to {
-        opacity: 0.4;
+        opacity: 0.6;
     }
 }
 
